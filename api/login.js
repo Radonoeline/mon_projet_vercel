@@ -5,8 +5,8 @@ export default function handler(req, res) {
 
   // ⚠️ Base utilisateur simple en dur (tu peux l’améliorer avec Supabase)
   const USERS = [
-    { email: "admin@example.com", password: "secret" },
-    { email: "demo@demo.com", password: "1234" }
+    { email: "rado@gmail.com", password: "secret" },
+    { email: "santatra@gmail.com", password: "1234" }
   ];
 
   const user = USERS.find(u => u.email === email && u.password === password);
