@@ -40,7 +40,7 @@
       const password = form.password.value.trim();
 
       try {
-        const res = await fetch('https://mon-saoping.vercel.app/api/login', {
+        const res = await fetch('https://mon-saoping.vercel.app/api/login.html', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, password }),
