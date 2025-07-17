@@ -1,19 +1,22 @@
+import jwt from 'jsonwebtoken';
+
+const SECRET = 'ton-secret-ultra-securise'; // Change ça en vrai secret !
+
 export default function handler(req, res) {
-  if (req.method !== "POST") return res.status(405).end();
+  if (req.method !== 'POST') return res.status(405).end();
 
   const { email, password } = req.body;
 
-  // ⚠️ Base utilisateur simple en dur (tu peux l’améliorer avec Supabase)
+  // Utilisateurs autorisés (exemple simple)
   const USERS = [
-    { email: "rado@gmail.com", password: "secret" },
-    { email: "santatra@gmail.com", password: "1234" }
+    { email: 'rado@gmail.com', password: 'ok' },
   ];
 
   const user = USERS.find(u => u.email === email && u.password === password);
-  if (!user) return res.status(401).json({ error: "Identifiants invalides" });
+  if (!user) return res.status(401).json({ error: 'Identifiants invalides' });
 
-  // Token simple base64 (à remplacer par vrai JWT pour la prod)
-  const token = Buffer.from(email + ":ok").toString("base64");
+  // Génère token JWT valide 7 jours
+  const token = jwt.sign({ email }, SECRET, { expiresIn: '7d' });
+
   res.status(200).json({ token });
 }
-
