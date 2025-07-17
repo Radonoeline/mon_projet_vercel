@@ -1,36 +1,73 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
-  <title>Login SaaS</title>
+  <meta charset="UTF-8" />
+  <title>Connexion SaaS</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f0f2f5; padding: 30px; }
+    form { max-width: 300px; margin: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+    label { display: block; margin-bottom: 6px; font-weight: bold; }
+    input { width: 100%; padding: 8px; margin-bottom: 12px; border: 1px solid #ccc; border-radius: 4px; }
+    button { width: 100%; padding: 10px; background: #0078d7; color: white; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; }
+    button:hover { background: #005a9e; }
+    .message { text-align: center; margin-top: 15px; font-weight: bold; }
+    .error { color: #d93025; }
+    .success { color: #188038; }
+  </style>
 </head>
 <body>
-  <h2>Login</h2>
+
   <form id="loginForm">
-    <input type="email" id="email" placeholder="Email" required /><br>
-    <input type="password" id="password" placeholder="Password" required /><br>
-    <button type="submit">Login</button>
+    <h2>Connexion</h2>
+    <label for="email">Email</label>
+    <input type="email" id="email" required />
+    <label for="password">Mot de passe</label>
+    <input type="password" id="password" required />
+    <button type="submit">Se connecter</button>
+    <div class="message" id="message"></div>
   </form>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    const form = document.getElementById('loginForm');
+    const messageDiv = document.getElementById('message');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+      messageDiv.textContent = '';
+      messageDiv.className = 'message';
 
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-      });
+      const email = form.email.value.trim();
+      const password = form.password.value.trim();
 
-      const data = await res.json();
-      if (res.ok) {
-        localStorage.setItem("authToken", data.token);
-        alert("Login réussi !");
-      } else {
-        alert("Erreur : " + data.error);
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          messageDiv.textContent = data.error || 'Erreur inconnue';
+          messageDiv.classList.add('error');
+          return;
+        }
+
+        // Stocke token JWT
+        localStorage.setItem('authToken', data.token);
+
+        messageDiv.textContent = 'Connexion réussie ! Vous pouvez fermer cette page.';
+        messageDiv.classList.add('success');
+        form.reset();
+
+      } catch (err) {
+        messageDiv.textContent = 'Erreur réseau, veuillez réessayer.';
+        messageDiv.classList.add('error');
+        console.error(err);
       }
     });
   </script>
+
 </body>
 </html>
