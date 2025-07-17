@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-const SECRET = 'ton-secret-ultra-securise'; // Change ça en vrai secret !
+const SECRET = '4r9!Kpz6w#Lmqv7S8&N2xYb@HtRfZjQd'; // Change ça en vrai secret !
 
 export default function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
